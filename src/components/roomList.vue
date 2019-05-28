@@ -1,9 +1,29 @@
 <template>
   <div class="allRooms">
-    <div class="controll"></div>
 
-    <div class="cards">
-      <div class="xx" v-for="card in cards">
+    <div class="controll">
+      <div class="keyword">
+       <label>Search Keyword:</label>
+       <input v-model="keyword">
+      </div>
+      <div class="range">
+        <label>Min</label>
+        <input type="text" v-model="minPrice">
+        <label>Max</label>
+        <input type="text" v-model="maxPrice">
+      </div>
+      <div class="controllSold">
+        <span v-for="(card,index) in cards">
+          <label>{{index+1}}</label>
+          <input type="checkbox" v-model="card.soldOut">
+          <input type="text" v-model.number="card.price">
+        </span>
+      </div>
+    </div>
+
+    <ul class="cards">
+      <h3 v-if="keyword">You Searched <span style="color:red">"{{keyword}}"</span></h3>
+      <li v-for="card in cards" v-if="(card.price >= minPrice && card.price <= maxPrice) && (card.title.indexOf(keyword) != -1)">
         <!-- --- image ----- -->
         <img :src="card.cover">
         <!-- --- info ---- -->
@@ -19,17 +39,20 @@
             <strong>{{tax}}</strong> % tax
           </div>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      basePrice: 100,
       tax: 10,
+      minPrice: 50,
+      maxPrice: 300,
+      keyword:'',
       cards: [
         {
           title: "Beautiful Mountain Condo Pool, Hot Tub, WaterSlide",
@@ -81,7 +104,7 @@ export default {
     width: 100%;
     margin: 0;
     padding: 0;
-    .xx {
+    li {
       display: inline-block;
       list-style: none;
       width: 250px;
@@ -105,7 +128,7 @@ export default {
         .price {
           font-size: 32px;
           font-weight: 500;
-          clear:both;
+          clear: both;
 
           .unit {
             font-size: 16px;
@@ -117,7 +140,7 @@ export default {
             font-weight: 500;
             font-size: 13px;
             border-radius: 3px;
-            float:right;
+            float: right;
           }
         }
         .tax {
