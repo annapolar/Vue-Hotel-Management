@@ -14,5 +14,9 @@ export default {
 <style lang="scss">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  color:rgb(39, 41, 48);
+}
+html,body{
+  box-sizing: border-box;
 }
 </style>
