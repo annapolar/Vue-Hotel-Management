@@ -1,57 +1,61 @@
 <template>
-  <div class="allRooms">
-    <div class="control">
-      <div class="leftSection">
-        <h2>Search</h2>
-        <div class="keyword">
-          <input v-model="keyword" placeholder="Try 'Beach View' or 'Swimming Pool' ">
-        </div>
-        <div class="range">
-          Price Range:
-          <input type="text" v-model="minPrice"> -
-          <input type="text" v-model="maxPrice">
-        </div>
-      </div>
-
-      <div class="rightSection">
-         <h2>Back Stage</h2>
-        <div class="backStage">
-          <ul>
-            <div class="title">
-              <span class="roomOrder">No.</span>
-              <span class="roomName">Name</span>
-              <span class="roomPrice">Price</span>
-              <span class="roomOpen">Available</span>
-            </div>
-            <li v-for="(card,index) in cards">
-              <span class="roomOrder">{{index+1}}.</span>
-              <span class="roomName">{{card.title}}</span>
-              <span class="roomPrice">
-                <input type="text" v-model.number="card.price">
-              </span>
-              <span class="roomOpen">
-                <label class="container">
-                  <input type="checkbox" v-model="card.available" checked="checked">
-                  <mark class="checkmark"></mark>
-                </label>
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
+  <div class="managementWrap">
+    <div class="roomManagement">
+      <h2>Hotel Management</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th></th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Available</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(card,index) in cards" :key="index">
+            <td>00{{index+1}}</td>
+            <td>
+              <div :style="{backgroundImage: `url(${card.cover})`}" class="thumbnail"></div>
+            </td>
+            <td>{{card.title}}</td>
+            <td>
+              <input type="text" v-model.number="card.price" />
+            </td>
+            <td>
+              <label class="container">
+                <input type="checkbox" v-model="card.available" checked="checked" />
+                <mark class="checkmark"></mark>
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <ul class="cards">
+      <h2>Preview</h2>
+      <div class="topControl">
+        <div class="keyword">
+          <input v-model="keyword" placeholder="Beach View" />
+        </div>
+        <div class="range">
+          Price Range:
+          <input type="text" v-model="minPrice" /> -
+          <input type="text" v-model="maxPrice" />
+        </div>
+      </div>
       <h3 v-if="keyword">
         You Searched
         <span style="color:red">"{{keyword}}"</span>
       </h3>
       <li
-        v-for="card in cards"
+        v-for="(card, index) in cards"
         v-if="(card.price >= minPrice && card.price <= maxPrice) && (card.title.indexOf(keyword) != -1)"
+        :key="index"
       >
         <!-- --- image ----- -->
-        <img :src="card.cover">
+        <img :src="card.cover" />
         <!-- --- info ---- -->
         <div class="info">
           <h3 class="title">{{card.title}}</h3>
@@ -76,7 +80,7 @@ export default {
     return {
       tax: 10,
       minPrice: 50,
-      maxPrice: 350,
+      maxPrice: 500,
       keyword: "",
       cards: [
         {
@@ -113,6 +117,27 @@ export default {
             "https://cdn.pixabay.com/photo/2017/08/07/09/25/swimming-2601877__340.jpg",
           price: 195,
           available: true
+        },
+        {
+          title: "Five Seasons Resort Hualalai",
+          cover:
+            "https://cdn.pixabay.com/photo/2015/11/11/04/07/vacation-1038166__340.jpg",
+          price: 295,
+          available: true
+        },
+        {
+          title: "Halton Waiko Village",
+          cover:
+            "https://cdn.pixabay.com/photo/2016/10/13/09/08/travel-1737172__340.jpg",
+          price: 215,
+          available: true
+        },
+        {
+          title: "Halekulani Ore Hotel",
+          cover:
+            "https://cdn.pixabay.com/photo/2012/12/19/18/13/architecture-70920__340.jpg",
+          price: 125,
+          available: true
         }
       ]
     };
@@ -121,118 +146,81 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.allRooms {
+.managementWrap {
   width: 100%;
-  padding:20px;
+  display: flex;
+
+  h2 {
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 30px;
+  }
   input {
     outline: none;
   }
-  .control {
-    margin-bottom: 20px;
-    display: flex;
+  .roomManagement {
     width: 100%;
-    background-color: #fff;
-    border-bottom:1px solid rgb(226, 229, 231);
-    // box-shadow:0 5px 20px rgba(black,0.05);
+    background-color: #f5f6f7;
+    padding: 30px;
 
-    .leftSection {
-      margin: 0 20px;
-      .keyword {
-        position: relative;
-        margin: 20px 0;
-        &:before {
-          content: "🔍";
-          font-size: 20px;
-          position: absolute;
-          left: 20px;
-          top: 10px;
-        }
-        input {
-          width: 330px;
-          height: 48px;
-          font-size: 15px;
-          padding: 0 20px 0 60px;
-          border: none;
-          border-radius: 3px;
-          box-shadow: 0 0 10px rgba(black, 0.2);
+    table {
+      width: 100%;
+      margin-top: 40px;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+
+      thead {
+        tr {
+          th {
+            padding: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+          }
         }
       }
-      .range {
-        input {
-          width: 100px;
-          height: 38px;
-          border: 1px solid rgba(220, 224, 224, 1);
-          border-radius: 3px;
-          font-size: 15px;
-          padding: 0 15px;
-        }
-      }
-    }
-    .rightSection {
-      width:100%;
-      margin:0 40px;
-      .backStage {
-        width:100%;
-        min-width: 610px;
-        margin: 20px 0;
-        ul {
-          width: 100%;
-          margin: 0;
-          padding: 0;
-          font-size: 14px;
+      tbody {
+        tr {
+          background-color: #fff;
+          transition: 0.5s;
+          border-radius: 6px;
 
-          li {
-            width: 100%;
-            list-style: none;
-            padding: 2px 0;
-            background-color: rgb(251, 255, 255);
-            border-radius: 5px;
-            margin: 4px 0;
+          &:hover {
+            box-shadow: 0 0 0 1px rgb(21, 133, 148);
+          }
 
-            &:nth-child(odd) {
-              background-color: rgb(242, 248, 248);
+          td {
+            padding: 10px;
+            vertical-align: middle;
+            &:first-child {
+              border-top-left-radius: 6px;
+              border-bottom-left-radius: 6px;
             }
-          }
-          .title {
-            width: 100%;
-            background-color: rgb(21, 133, 148);
-            color: white;
-            line-height: 2;
-            letter-spacing: 0.5px;
-            border-radius: 5px;
-          }
-          span {
-            display: inline-block;
-            width: 100%;
-            padding: 0 4px 0 12px;
-          }
-          .roomOrder {
-            width: 5%;
-          }
-          .roomName {
-            width: 55%;
-          }
-          .roomPrice {
-            width: 15%;
+            &:last-child {
+              border-top-right-radius: 6px;
+              border-bottom-right-radius: 6px;
+            }
+
+            .thumbnail {
+              width: 40px;
+              height: 40px;
+              background-size: cover;
+              background-position: center;
+              border-radius: 4px;
+            }
             input {
-              width: 50px;
-              height: 24px;
-              border: 1px solid rgba(220, 224, 224, 1);
-              border-radius: 3px;
-              font-size: 15px;
-              padding: 0 15px;
-              font-size: 13px;
+              width: 80px;
+              height: 35px;
+              border-radius: 4px;
+              border: 1px solid rgb(214, 223, 217);
+              padding: 0 10px;
+              text-align: center;
             }
-          }
-          .roomOpen {
-            width: 12%;
             .container {
               display: block;
               position: relative;
-              // padding-left: 35px;
               margin-bottom: 16px;
               cursor: pointer;
-              // font-size: 22px;
               -webkit-user-select: none;
               -moz-user-select: none;
               -ms-user-select: none;
@@ -290,7 +278,7 @@ export default {
               width: 4px;
               height: 8px;
               border: solid white;
-              border-width: 0 3px 3px 0;
+              border-width: 0 2px 2px 0;
               -webkit-transform: rotate(45deg);
               -ms-transform: rotate(45deg);
               transform: rotate(45deg);
@@ -303,21 +291,60 @@ export default {
 
   .cards {
     width: 100%;
-    margin: 0;
-    padding: 0;
+    padding: 30px;
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .topControl {
+      display: flex;
+      margin-bottom: 20px;
+      .keyword {
+        position: relative;
+        margin-right: 30px;
+        &:before {
+          content: "🔍";
+          font-size: 20px;
+          position: absolute;
+          left: 20px;
+          top: 14px;
+        }
+        input {
+          height: 42px;
+          font-size: 15px;
+          padding: 0 20px 0 60px;
+          border: none;
+          border-radius: 3px;
+          border: 1px solid rgba(220, 224, 224, 1);
+        }
+      }
+      .range {
+        input {
+          width: 80px;
+          height: 42px;
+          border: 1px solid rgba(220, 224, 224, 1);
+          border-radius: 3px;
+          font-size: 15px;
+          padding: 0 15px;
+        }
+      }
+    }
     li {
       display: inline-block;
       list-style: none;
-      width: 250px;
-      height: 340px;
+      width: 190px;
+      height: 270px;
       background-color: rgb(255, 255, 255);
       margin: 4px;
+      margin-bottom: 20px;
       padding: 10px;
       border-radius: 3px;
       box-shadow: 0 5px 10px rgba(black, 0.1);
       img {
         width: 100%;
         background-size: cover;
+        margin-bottom: 10px;
       }
       .info {
         .title {
@@ -327,9 +354,10 @@ export default {
           }
         }
         .price {
-          font-size: 32px;
+          font-size: 25px;
           font-weight: 500;
           clear: both;
+          margin: 10px 0;
 
           .unit {
             font-size: 16px;
@@ -337,7 +365,7 @@ export default {
           mark {
             background-color: #fd5c63;
             color: white;
-            padding: 6px 12px;
+            padding: 6px;
             font-weight: 500;
             font-size: 13px;
             border-radius: 3px;
